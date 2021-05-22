@@ -49,7 +49,7 @@ func main() {
 
 func fetchGeminiPage(remoteUrl string) (*gemini.Response, error) {
     // Todo: configurable:
-    maxRequestTime := 30
+    maxRequestTime := 10
 
     gemclient := &gemini.Client{}
     ctx, _ := context.WithTimeout(context.Background(), time.Duration(maxRequestTime)*time.Second)
@@ -70,7 +70,6 @@ func validateUrl(remoteUrl string) (string, error) {
     remote = strings.Replace(remote, "..", "", -1)
 
     u, err := url.Parse(remote)
-    //fmt.Println(u, u.Path, u.Host, u.Scheme)
 
     if err != nil {
         return "", fmt.Errorf("Provided URL is not a good URL: %s", err)
@@ -80,6 +79,5 @@ func validateUrl(remoteUrl string) (string, error) {
         remote = "gemini://" + u.Host + "/" + u.Path
     }
 
-    //fmt.Println(remote)
     return remote, nil
 }
