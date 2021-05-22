@@ -25,20 +25,20 @@ func main() {
 
     u, e := validateUrl(remoteUrl);
     if e != nil {
-        fmt.Printf("Url is not valid:\n %v\r\n", e)
+        fmt.Printf("Url is not valid.\r\n")
         endResponse()
     }
 
     req, err := fetchGeminiPage(u)
 
     if err != nil {
-        fmt.Printf("The url you are testing (%v) seems down:\n%v\r\n", u, err)
+        fmt.Printf("The url you are testing (%v) seems down.\r\n", u)
         endResponse()
     }
 
     // if the server response if an error code, capsule isn't up.
     if req.Status == gemini.StatusTemporaryFailure || req.Status == gemini.StatusServerUnavailable || req.Status == gemini.StatusCGIError || req.Status == gemini.StatusProxyError || req.Status == gemini.StatusPermanentFailure || req.Status == gemini.StatusGone || req.Status == gemini.StatusProxyRequestRefused || req.Status == gemini.StatusBadRequest {
-        fmt.Printf("The url you are testing (%v) seems down, status is %v", u, req.Status)
+        fmt.Printf("The url you are testing (%v) seems down, status is %v\r\n", u, req.Status)
         endResponse()
     }
 
