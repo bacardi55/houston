@@ -18,7 +18,7 @@ func main() {
         fmt.Println("Enter the URL to test: ")
         os.Exit(0)
     } else {
-        fmt.Println("20\ttext/gemtext\r\n")
+        fmt.Println("20\ttext/gemini\r\n")
     }
 
     remoteUrl := os.Getenv("QUERY_STRING")
@@ -26,25 +26,27 @@ func main() {
     u, e := validateUrl(remoteUrl);
     if e != nil {
         fmt.Printf("Url is not valid:\n %v\r\n", e)
-        os.Exit(0)
+        endResponse()
     }
 
     req, err := fetchGeminiPage(u)
 
     if err != nil {
         fmt.Printf("The url you are testing (%v) seems down:\n%v\r\n", u, err)
-        os.Exit(0)
+        endResponse()
     }
 
     // if the server response if an error code, capsule isn't up.
     if req.Status == gemini.StatusTemporaryFailure || req.Status == gemini.StatusServerUnavailable || req.Status == gemini.StatusCGIError || req.Status == gemini.StatusProxyError || req.Status == gemini.StatusPermanentFailure || req.Status == gemini.StatusGone || req.Status == gemini.StatusProxyRequestRefused || req.Status == gemini.StatusBadRequest {
-        fmt.Printf("The url you are testing (%v) seems down:\n%v\r\n", u, err)
+        fmt.Printf("The url you are testing (%v) seems down, status is %v", u, req.Status)
+        endResponse()
     }
 
     // Todo: Should I follow redirect and check redirect status' code…?
     // Or is a redirect response enough to see that the capsule is up?
 
     fmt.Printf("Everything seems ok with %v\r\n", u)
+    endResponse()
 }
 
 func fetchGeminiPage(remoteUrl string) (*gemini.Response, error) {
@@ -75,9 +77,17 @@ func validateUrl(remoteUrl string) (string, error) {
         return "", fmt.Errorf("Provided URL is not a good URL: %s", err)
     } else if u.Scheme != "gemini" && u.Scheme != "" {
         return "", fmt.Errorf("Only gemini url are supported for now.")
-    } else if u.Scheme == "" {
-        remote = "gemini://" + u.Host + "/" + u.Path
+    } else {
+        return "gemini://" + u.Host + u.Path, nil
     }
 
+    fmt.Println(remote)
     return remote, nil
 }
+
+func endResponse() {
+    fmt.Printf("=> /index.gmi Return to Houston homepage\r\n")
+    fmt.Printf("=> /cgi-bin/houston Test another URL\r\n")
+    os.Exit(0)
+}
+
