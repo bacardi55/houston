@@ -1,16 +1,18 @@
 package main
 
 import (
-  "fmt"
-  "time"
-  "os"
-  "context"
-  "strings"
+    "fmt"
+    "time"
+    "os"
+    "context"
+    "strings"
 
-  "net/url"
+    "net/url"
 
-  "git.sr.ht/~adnano/go-gemini"
+    "git.sr.ht/~adnano/go-gemini"
 )
+
+const invalidCertErrorMsg = "Certificate is unvalid"
 
 func main() {
     if os.Getenv("QUERY_STRING") == "" {
@@ -29,23 +31,33 @@ func main() {
         endResponse()
     }
 
-    req, err := fetchGeminiPage(u)
+    invalidCert := false
+    resp, err := fetchGeminiPage(u)
 
     if err != nil {
-        fmt.Printf("The url you are testing (%v) seems down.\r\n", u)
-        endResponse()
+        if err.Error() == invalidCertErrorMsg {
+            invalidCert = true
+        } else {
+            fmt.Printf("The url you are testing (%v) seems down.\r\n", u)
+            endResponse()
+        }
     }
 
     // if the server response if an error code, capsule isn't up.
-    if req.Status == gemini.StatusTemporaryFailure || req.Status == gemini.StatusServerUnavailable || req.Status == gemini.StatusCGIError || req.Status == gemini.StatusProxyError || req.Status == gemini.StatusPermanentFailure || req.Status == gemini.StatusGone || req.Status == gemini.StatusProxyRequestRefused || req.Status == gemini.StatusBadRequest {
-        fmt.Printf("The url you are testing (%v) seems down, status is %v\r\n", u, req.Status)
+    if resp.Status == gemini.StatusTemporaryFailure || resp.Status == gemini.StatusServerUnavailable || resp.Status == gemini.StatusCGIError || resp.Status == gemini.StatusProxyError || resp.Status == gemini.StatusPermanentFailure || resp.Status == gemini.StatusGone || resp.Status == gemini.StatusProxyRequestRefused || resp.Status == gemini.StatusBadRequest {
+        fmt.Printf("The url you are testing (%v) seems down, status is %v\r\n", u, resp.Status)
         endResponse()
     }
 
     // Todo: Should I follow redirect and check redirect status' code…?
     // Or is a redirect response enough to see that the capsule is up?
 
-    fmt.Printf("Everything seems ok with %v\r\n", u)
+    if (invalidCert) {
+        fmt.Printf("The capsule %v seems up and running but the certificate is expired.\r\n", u)
+    } else {
+        fmt.Printf("Everything seems ok with %v.\r\n", u)
+    }
+
     endResponse()
 }
 
@@ -58,7 +70,12 @@ func fetchGeminiPage(remoteUrl string) (*gemini.Response, error) {
     response, err := gemclient.Get(ctx, remoteUrl)
 
     if err != nil {
-        return nil, err
+        return response, err
+    }
+
+    if respCert := response.TLS().PeerCertificates;
+        (len(respCert) > 0 && time.Now().After(respCert[0].NotAfter)) {
+        return response, fmt.Errorf(invalidCertErrorMsg)
     }
 
     return response, nil
@@ -80,9 +97,6 @@ func validateUrl(remoteUrl string) (string, error) {
     } else {
         return "gemini://" + u.Host + u.Path, nil
     }
-
-    fmt.Println(remote)
-    return remote, nil
 }
 
 func endResponse() {
