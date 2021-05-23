@@ -1,0 +1,15 @@
+# Houston… (do) we have a problem (?)
+
+Welcome on Houston, a simple tool to check if a capsule is up or not…
+
+=> /cgi-bin/houston Check a capsule status
+
+You can only check gemini capsule. Example of valid tests:
+* houston.gmi.bacardi55.io[/index.gmi] # bare fqdn without scheme, with or without a path to specific file.
+* gemini://houston.gmi.bacardi55.io[/index.gmi] # With the gemini scheme
+* gemini://houston.gmi.bacardi55.io:1965[/index.gmi] # With the gemini scheme and a specific port.
+
+There is known issue with capsule on non standard (≠1965) port. If the capsule you test is using a different port, you must test it with the scheme in the url (meaning, your url must start with gemini://).
+
+This tool is called Houston because who do you call when your capsule has an issue? (Yeah I know…)
+
