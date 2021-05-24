@@ -13,6 +13,9 @@ import (
 )
 
 const invalidCertErrorMsg = "Certificate is unvalid"
+// Nota: Gemini servers might have max execution time for cgi scripts.
+// Eg: Gemserv has a 5s maximum policy before killing the request.
+const maxRequestTime = 4
 
 func main() {
     if os.Getenv("QUERY_STRING") == "" {
@@ -62,9 +65,6 @@ func main() {
 }
 
 func fetchGeminiPage(remoteUrl string) (*gemini.Response, error) {
-    // Todo: configurable:
-    maxRequestTime := 10
-
     gemclient := &gemini.Client{}
     ctx, _ := context.WithTimeout(context.Background(), time.Duration(maxRequestTime)*time.Second)
     response, err := gemclient.Get(ctx, remoteUrl)
