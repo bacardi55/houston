@@ -61,6 +61,11 @@ func main() {
         fmt.Printf("Everything seems ok with %v.\r\n", u)
     }
 
+    respCert := resp.TLS().PeerCertificates
+    if respCert[0].PublicKeyAlgorithm.String() == "Ed25519" {
+      fmt.Println("\nPS: This capsule TLS certificate is using Ed25519 algorythm that is not supported by every client.\n")
+    }
+
     endResponse()
 }
 
