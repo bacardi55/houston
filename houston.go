@@ -20,11 +20,10 @@ const maxRequestTime = 4
 
 func main() {
 	if os.Getenv("QUERY_STRING") == "" {
-		fmt.Println("10\ttext/gemtext\r\n")
-		fmt.Println("Enter the URL to test: ")
+		fmt.Println("10 Enter the URL to test:\r\n")
 		os.Exit(0)
 	} else {
-		fmt.Println("20\ttext/gemini\r\n")
+		fmt.Println("20 text/gemini\r\n")
 	}
 
 	remoteUrl := os.Getenv("QUERY_STRING")
