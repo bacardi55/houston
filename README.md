@@ -1,3 +1,5 @@
+Official repository and project is on [codeberg](https://codeberg.org/bacardi55/houston). Github is only a mirror.
+
 # houston
 
 Check if a gemini capsule is down.
