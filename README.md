@@ -2,6 +2,11 @@ Official repository and project is on [codeberg](https://codeberg.org/bacardi55/
 
 # houston
 
+[![builds.sr.ht status](https://builds.sr.ht/~bacardi55/houston.svg)](https://builds.sr.ht/~bacardi55/houston?)
+[![license: AGPL-3.0-only](https://img.shields.io/badge/license-AGPL--3.0--only-informational.svg)](LICENSE)
+
+Official repository and project is on [sourcehut](https://git.sr.ht/~bacardi55/houston). Github and codeberg are only mirrors.
+
 Check if a gemini capsule is down.
 
 You can see it working here:
