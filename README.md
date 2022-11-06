@@ -1,5 +1,3 @@
-Official repository and project is on [codeberg](https://codeberg.org/bacardi55/houston). Github is only a mirror.
-
 # houston
 
 [![builds.sr.ht status](https://builds.sr.ht/~bacardi55/houston.svg)](https://builds.sr.ht/~bacardi55/houston?)
