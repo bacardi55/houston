@@ -1,0 +1,17 @@
+image: alpine/edge
+packages:
+  - go
+  - make
+sources:
+  - https://git.sr.ht/~bacardi55/houston
+tasks:
+  - setup: |
+      cd houston
+      make dependencies
+  - build: |
+      cd houston
+      make build
+triggers:
+  - action: email
+    condition: always
+    to: bac@rdi55.pl
