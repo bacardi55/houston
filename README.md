@@ -1,3 +1,5 @@
+Official repository and project is on [soucehut](https://git.sr.ht/~bacardi55/houston). This repository is archived.
+
 # houston
 
 [![builds.sr.ht status](https://builds.sr.ht/~bacardi55/houston.svg)](https://builds.sr.ht/~bacardi55/houston?)
